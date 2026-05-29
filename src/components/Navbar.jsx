@@ -3,15 +3,25 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Bars, Xmark } from "@gravity-ui/icons";
+import { signOut, useSession } from "@/lib/auth-client";
+import { Button } from "@heroui/react";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const {data:session, pending} = useSession()
 
+  const user = session?.user
+  // console.log(session)
+ 
   const navLinks = [
     { name: "Browse Jobs", href: "/jobs" },
     { name: "Company", href: "/company" },
     { name: "Pricing", href: "/pricing" },
   ];
+
+  const signOutHandler = async () => {
+    await signOut();
+  }
 
   return (
     // <header className="sticky top-0 z-50 px-4 py-4 mx-10 black rounded-2xl">
@@ -53,15 +63,22 @@ export default function Navbar() {
             <div className="h-5 w-px bg-white/10" />
 
             {/* AUTH */}
-            <Link
-              href="/login"
-              className="text-sm font-medium text-violet-400 transition hover:text-violet-300"
-            >
-              Sign In
-            </Link>
+            {user ? (
+              <>
+                Hi, {user.name}
+                <Button onClick={signOutHandler} variant="danger">Log Out</Button>
+              </>
+            ) : (
+              <Link
+                href="/signin"
+                className="text-sm font-medium text-violet-400 transition hover:text-violet-300"
+              >
+                Sign In
+              </Link>
+            )}
 
             <Link
-              href="/register"
+              href="/signup"
               className="rounded-full bg-violet-600 px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-violet-500/20 transition hover:bg-violet-500"
             >
               Get Started
@@ -99,12 +116,15 @@ export default function Navbar() {
 
             <div className="my-2 h-px bg-white/10" />
 
-            <Link href="/login" className="text-sm font-medium text-violet-400">
+            <Link
+              href="/signin"
+              className="text-sm font-medium text-violet-400"
+            >
               Sign In
             </Link>
 
             <Link
-              href="/register"
+              href="/signup"
               className="rounded-xl bg-violet-600 px-5 py-3 text-center text-sm font-semibold text-white"
             >
               Get Started
