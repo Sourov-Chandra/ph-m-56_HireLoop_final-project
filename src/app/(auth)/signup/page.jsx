@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Description, Label, Radio, RadioGroup } from "@heroui/react";
 import { Button } from "@heroui/react";
 
 import {
@@ -13,7 +14,7 @@ import {
   BsGoogle,
 } from "react-icons/bs";
 
-import { signUp, signOut } from "@/lib/auth-client";
+import { signUp, signOut, authClient } from "@/lib/auth-client";
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -32,6 +33,7 @@ export default function SignUpPage() {
   const [errors, setErrors] = useState({});
 
   const [passwordStrength, setPasswordStrength] = useState(0);
+  const [role, setRole] = useState("seeker");
 
   const calculatePasswordStrength = (password) => {
     let strength = 0;
@@ -166,7 +168,10 @@ export default function SignUpPage() {
         name: formData.name,
         email: formData.email,
         password: formData.password,
+        role: role,
       });
+
+      console.log(result, "result");
 
       if (result?.error) {
         throw new Error(result.error.message || "Failed to create account");
@@ -199,6 +204,14 @@ export default function SignUpPage() {
     { label: "Strong", color: "bg-lime-500" },
     { label: "Very Strong", color: "bg-green-500" },
   ];
+
+  //google
+  const googleHandler = async () => {
+    const data = await authClient.signIn.social({
+      provider: "google",
+    });
+  }
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-black via-zinc-950 to-zinc-900 py-12 px-4 sm:px-6 lg:px-8">
@@ -240,6 +253,7 @@ export default function SignUpPage() {
           {/* Social Button */}
           <div className="mb-6">
             <Button
+              onClick={googleHandler}
               type="button"
               variant="bordered"
               className="w-full border-zinc-700 bg-zinc-950 text-white hover:bg-zinc-800"
@@ -425,6 +439,36 @@ export default function SignUpPage() {
                 Use 8+ characters with uppercase, lowercase & numbers
               </p>
             </div>
+
+            {/* role selection */}
+      <Label>Select your role</Label>
+      <RadioGroup onChange={(value) => setRole(value)} defaultValue="seeker" name="plan-orientation" orientation="horizontal">
+        <Radio value="seeker">
+          <Radio.Control>
+            <Radio.Indicator />
+          </Radio.Control>
+          <Radio.Content>
+            <Label>Seeker</Label>
+          </Radio.Content>
+        </Radio>
+        <Radio value="recruiter">
+          <Radio.Control>
+            <Radio.Indicator />
+          </Radio.Control>
+          <Radio.Content>
+            <Label>Recruiter</Label>
+          </Radio.Content>
+        </Radio>
+        {/* <Radio value="teams">
+          <Radio.Control>
+            <Radio.Indicator />
+          </Radio.Control>
+          <Radio.Content>
+            <Label>Teams</Label>
+            <Description>Up to 10 teammates</Description>
+          </Radio.Content>
+        </Radio> */}
+      </RadioGroup>
 
             {/* Terms */}
             <div className="w-full">

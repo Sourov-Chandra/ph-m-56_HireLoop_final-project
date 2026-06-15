@@ -12,7 +12,7 @@ import {
   BsApple,
 } from "react-icons/bs";
 
-import { signIn } from "@/lib/auth-client";
+import { authClient, signIn } from "@/lib/auth-client";
 
 export default function SignInPage() {
   const router = useRouter();
@@ -58,6 +58,12 @@ export default function SignInPage() {
     }
   };
 
+  const googleLoginHandler = async (e) => {
+    const data = await authClient.signIn.social({
+      provider: "google",
+    });
+  };
+
   // Reusable input class for dark theme
   const inputClass =
     "w-full px-4 py-3 rounded-lg bg-zinc-950 border border-zinc-700 text-white placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent disabled:bg-zinc-900 disabled:cursor-not-allowed transition-all";
@@ -74,7 +80,7 @@ export default function SignInPage() {
             <p className="mt-2 text-sm text-zinc-400">
               Or{" "}
               <Link
-                href="/sign-up"
+                href="/signup"
                 className="text-indigo-400 hover:text-indigo-300 font-medium"
               >
                 create a new account
@@ -85,6 +91,7 @@ export default function SignInPage() {
           {/* Social Sign In Buttons */}
           <div className="flex text-center mb-6">
             <Button
+              onClick={googleLoginHandler}
               type="button"
               variant="bordered"
               className="w-full bg-zinc-950 border-zinc-700 text-white hover:bg-zinc-900"

@@ -66,23 +66,27 @@ export default function Navbar() {
             {user ? (
               <>
                 Hi, {user.name}
-                <Button onClick={signOutHandler} variant="danger">Log Out</Button>
+                <Button onClick={signOutHandler} variant="danger">
+                  Log Out
+                </Button>
               </>
             ) : (
-              <Link
-                href="/signin"
-                className="text-sm font-medium text-violet-400 transition hover:text-violet-300"
-              >
-                Sign In
-              </Link>
-            )}
+              <>
+                <Link
+                  href="/signin"
+                  className="text-sm font-medium text-violet-400 transition hover:text-violet-300"
+                >
+                  Sign In
+                </Link>
 
-            <Link
-              href="/signup"
-              className="rounded-full bg-violet-600 px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-violet-500/20 transition hover:bg-violet-500"
-            >
-              Get Started
-            </Link>
+                <Link
+                  href="/signup"
+                  className="rounded-full bg-violet-600 px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-violet-500/20 transition hover:bg-violet-500"
+                >
+                  Get Started
+                </Link>
+              </>
+            )}
           </div>
         </div>
 
@@ -101,35 +105,55 @@ export default function Navbar() {
 
       {/* MOBILE MENU */}
       {isOpen && (
-        <div className="mx-auto mt-3 max-w-7xl rounded-2xl border border-white/10 bg-black/80 p-6 backdrop-blur-xl md:hidden">
-          <div className="flex flex-col gap-5">
+        <div className="mx-auto mt-3 max-w-7xl rounded-2xl border border-white/10 bg-black/75 p-5 backdrop-blur-xl md:hidden">
+          <div className="flex flex-col gap-1 mb-4">
             {navLinks.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
                 onClick={() => setIsOpen(false)}
-                className="text-sm font-medium text-white/80 hover:text-white"
+                className="text-sm font-medium text-white/75 px-3 py-2.5 rounded-lg hover:bg-white/8 hover:text-white transition"
               >
                 {item.name}
               </Link>
             ))}
-
-            <div className="my-2 h-px bg-white/10" />
-
-            <Link
-              href="/signin"
-              className="text-sm font-medium text-violet-400"
-            >
-              Sign In
-            </Link>
-
-            <Link
-              href="/signup"
-              className="rounded-xl bg-violet-600 px-5 py-3 text-center text-sm font-semibold text-white"
-            >
-              Get Started
-            </Link>
           </div>
+
+          <div className="h-px bg-white/10 mb-4" />
+
+          {user ? (
+            <div className="flex items-center justify-between px-3 py-2 rounded-xl bg-white/5 border border-white/8">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-full bg-violet-600 flex items-center justify-center text-sm font-medium text-white">
+                  {user.name?.charAt(0)}
+                </div>
+                <span className="text-sm font-medium text-white/85">
+                  {user.name}
+                </span>
+              </div>
+              <button
+                onClick={signOutHandler}
+                className="text-sm text-red-400/85 bg-red-500/10 border border-red-500/20 px-3 py-1.5 rounded-lg hover:bg-red-500/15 transition"
+              >
+                Log out
+              </button>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-2">
+              <Link
+                href="/signin"
+                className="text-sm font-medium text-violet-400 px-3 py-2.5 rounded-lg border border-violet-400/25 text-center hover:bg-violet-400/8 transition"
+              >
+                Sign In
+              </Link>
+              <Link
+                href="/signup"
+                className="text-sm font-semibold text-white bg-violet-600 px-3 py-3 rounded-lg text-center hover:bg-violet-700 transition"
+              >
+                Get Started
+              </Link>
+            </div>
+          )}
         </div>
       )}
     </header>
