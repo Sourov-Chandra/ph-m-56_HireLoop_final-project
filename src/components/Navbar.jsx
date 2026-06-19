@@ -12,6 +12,7 @@ export default function Navbar() {
 
   const user = session?.user
   // console.log(session)
+  console.log(session, "session data from nav")
  
   const navLinks = [
     { name: "Browse Jobs", href: "/jobs" },

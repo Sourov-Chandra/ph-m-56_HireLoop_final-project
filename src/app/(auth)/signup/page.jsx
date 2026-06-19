@@ -443,12 +443,12 @@ export default function SignUpPage() {
             {/* role selection */}
       <Label>Select your role</Label>
       <RadioGroup onChange={(value) => setRole(value)} defaultValue="seeker" name="plan-orientation" orientation="horizontal">
-        <Radio value="seeker">
+        <Radio selected value="seeker">
           <Radio.Control>
             <Radio.Indicator />
           </Radio.Control>
           <Radio.Content>
-            <Label>Seeker</Label>
+            <Label>Job Seeker</Label>
           </Radio.Content>
         </Radio>
         <Radio value="recruiter">
