@@ -1,10 +1,11 @@
 import JobsTable from "@/components/dashboard/recruiter/JobsTable";
+import { getLoggedRecruiterCompany } from "@/lib/api/companies";
 import { getCompanyJobs } from "@/lib/api/jobs";
 import React from "react";
 
 const RecruiterJobsPage = async () => {
-  const companyId = "company_1";
-  const jobs = await getCompanyJobs(companyId);
+  const company = await getLoggedRecruiterCompany();
+  const jobs = await getCompanyJobs(company._id);
 
   return (
     <div className="min-h-screen bg-[#0a0816] px-6 py-8">

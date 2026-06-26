@@ -1,6 +1,12 @@
 "use server";
 
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+import { serverMutation } from "../core/server";
+
+export const createJob = async (newJobData) => {
+  return serverMutation("/api/jobs", newJobData);
+};
+
+/* const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 export const createJob = async (newJobData) => {
   console.log("baseUrl:", baseUrl);
@@ -17,3 +23,4 @@ export const createJob = async (newJobData) => {
 
   return res.json();
 };
+ */
