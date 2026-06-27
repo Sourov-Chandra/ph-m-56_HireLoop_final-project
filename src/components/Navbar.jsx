@@ -16,7 +16,7 @@ export default function Navbar() {
  
   const navLinks = [
     { name: "Browse Jobs", href: "/jobs" },
-    { name: "Company", href: "/company" },
+    { name: "Companies", href: "/companies" },
     { name: "Pricing", href: "/pricing" },
   ];
 

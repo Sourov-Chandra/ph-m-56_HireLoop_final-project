@@ -1,6 +1,13 @@
-
-import {LayoutSideContentLeft, Bell, Envelope, Gear, House, Magnifier, Person} from "@gravity-ui/icons";
-import {Button, Drawer} from "@heroui/react";
+import {
+  LayoutSideContentLeft,
+  Bell,
+  Envelope,
+  Gear,
+  House,
+  Magnifier,
+  Person,
+} from "@gravity-ui/icons";
+import { Button, Drawer } from "@heroui/react";
 import Link from "next/link";
 import { FaBriefcase } from "react-icons/fa";
 
@@ -15,7 +22,7 @@ export function DashboardSidebar() {
     },
     {
       icon: FaBriefcase,
-      href: "/dashboard/recruiter/jobs/company",
+      href: "/dashboard/recruiter/company",
       label: "Company Profile",
     },
     { icon: Envelope, href: "/", label: "Messages" },

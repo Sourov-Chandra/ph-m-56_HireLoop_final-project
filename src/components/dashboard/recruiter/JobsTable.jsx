@@ -7,17 +7,41 @@ import {
   FiTrash2,
   FiMapPin,
   FiClock,
+  FiCalendar,
   FiMoreVertical,
 } from "react-icons/fi";
 
 // ---- helpers -------------------------------------------------
 
-const formatSalary = (min, max) => {
-  const fmt = (n) => `৳${Number(n).toLocaleString("en-IN")}`;
+const CURRENCY_MAP = {
+  usd: { symbol: "$", locale: "en-US" },
+  bdt: { symbol: "৳", locale: "en-IN" },
+  eur: { symbol: "€", locale: "de-DE" },
+};
+
+const formatSalary = (min, max, currencyKey) => {
+  // Normalize key to lower case, default to 'bdt' if missing or unknown
+  const key = String(currencyKey || "bdt").toLowerCase();
+  const config = CURRENCY_MAP[key] || CURRENCY_MAP.bdt;
+
+  const fmt = (n) =>
+    `${config.symbol}${Number(n).toLocaleString(config.locale)}`;
   return `${fmt(min)} - ${fmt(max)}`;
 };
 
+const formatDate = (dateStr) => {
+  if (!dateStr) return "N/A";
+  return new Date(dateStr).toLocaleDateString("en-US", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+};
+
 const formatDeadline = (dateStr) => {
+  if (!dateStr)
+    return { label: "No Deadline", isUrgent: false, isExpired: false };
+
   const date = new Date(dateStr);
   const today = new Date();
   const diffDays = Math.ceil((date - today) / (1000 * 60 * 60 * 24));
@@ -45,6 +69,7 @@ const JOB_TYPE_LABELS = {
   "part-time": "Part-time",
   contract: "Contract",
   internship: "Internship",
+  remote: "Remote",
 };
 
 // ---- actions menu (for mobile) ----------------------------------------------
@@ -124,18 +149,15 @@ const MobileActionsMenu = ({ job, onView, onEdit, onDelete }) => {
 
 const JobsTable = ({ jobs = [] }) => {
   const handleView = (job) => {
-    console.log("view", job._id);
-    // router.push(`/recruiter/jobs/${job._id}`)
+    console.log("view", job._id?.$oid || job._id);
   };
 
   const handleEdit = (job) => {
-    console.log("edit", job._id);
-    // router.push(`/recruiter/jobs/${job._id}/edit`)
+    console.log("edit", job._id?.$oid || job._id);
   };
 
   const handleDelete = (job) => {
-    console.log("delete", job._id);
-    // open confirm modal / call delete API
+    console.log("delete", job._id?.$oid || job._id);
   };
 
   if (!jobs.length) {
@@ -152,25 +174,25 @@ const JobsTable = ({ jobs = [] }) => {
   return (
     <div className="rounded-2xl border border-white/10 bg-white/[0.02] backdrop-blur-xl shadow-xl shadow-black/20 overflow-hidden">
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[900px] border-collapse table-fixed">
+        <table className="w-full min-w-[950px] border-collapse table-fixed">
           <thead>
             <tr className="border-b border-white/10">
-              <th className="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-slate-400 text-center w-[30%]">
+              <th className="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-slate-400 text-center w-[28%]">
                 Job title
               </th>
               <th className="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-slate-400 text-center w-[12%]">
                 Type
               </th>
-              <th className="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-slate-400 text-center w-[18%]">
+              <th className="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-slate-400 text-center w-[16%]">
                 Salary range
               </th>
-              <th className="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-slate-400 text-center w-[15%]">
-                Deadline
+              <th className="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-slate-400 text-center w-[18%]">
+                Timeline
               </th>
               <th className="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-slate-400 text-center w-[12%]">
                 Status
               </th>
-              <th className="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-slate-400 text-center w-[13%]">
+              <th className="px-5 py-4 text-xs font-semibold uppercase tracking-wider text-slate-400 text-center w-[14%]">
                 Actions
               </th>
             </tr>
@@ -187,46 +209,59 @@ const JobsTable = ({ jobs = [] }) => {
                   key={id}
                   className="border-b border-white/5 last:border-b-0 hover:bg-violet-500/[0.04] transition-colors duration-150"
                 >
+                  {/* Job Title & Metadata */}
                   <td className="px-5 py-4 align-middle text-center">
                     <div>
-                      <p className="font-medium text-slate-100 truncate">{job.jobTitle}</p>
+                      <p className="font-medium text-slate-100 truncate">
+                        {job.jobTitle}
+                      </p>
                       <div className="flex items-center justify-center gap-3 mt-1">
                         <span className="flex items-center gap-1 text-xs text-slate-500 whitespace-nowrap">
                           <FiMapPin size={12} />
                           {job.location}
                         </span>
-                        <span className="text-xs text-slate-600 truncate">
+                        <span className="text-xs text-slate-600 truncate capitalize">
                           {job.jobCategory}
                         </span>
                       </div>
                     </div>
                   </td>
 
+                  {/* Job Type */}
                   <td className="px-5 py-4 align-middle text-center">
-                    <span className="inline-flex items-center rounded-md border border-violet-500/20 bg-violet-500/10 px-2.5 py-1 text-xs font-medium text-violet-300 whitespace-nowrap">
+                    <span className="inline-flex items-center rounded-md border border-violet-500/20 bg-violet-500/10 px-2.5 py-1 text-xs font-medium text-violet-300 whitespace-nowrap capitalize">
                       {JOB_TYPE_LABELS[job.jobType] || job.jobType}
                     </span>
                   </td>
 
+                  {/* Salary (With dynamic currency mapping) */}
                   <td className="px-5 py-4 align-middle text-center text-sm text-slate-300 whitespace-nowrap">
-                    {formatSalary(job.minSalary, job.maxSalary)}
+                    {formatSalary(job.minSalary, job.maxSalary, job.currency)}
                   </td>
 
+                  {/* Timeline (Created Date & Deadline) */}
                   <td className="px-5 py-4 align-middle text-center">
-                    <span
-                      className={`inline-flex items-center gap-1.5 text-sm whitespace-nowrap ${
-                        deadline.isExpired
-                          ? "text-rose-400"
-                          : deadline.isUrgent
-                            ? "text-amber-400"
-                            : "text-slate-300"
-                      }`}
-                    >
-                      <FiClock size={13} />
-                      {deadline.label}
-                    </span>
+                    <div className="flex flex-col items-center gap-1">
+                      <div className="flex items-center gap-1.5 text-xs text-slate-400 whitespace-nowrap">
+                        <FiCalendar size={12} className="text-slate-500" />
+                        <span>Posted: {formatDate(job.createdAt)}</span>
+                      </div>
+                      <div
+                        className={`flex items-center gap-1.5 text-xs whitespace-nowrap ${
+                          deadline.isExpired
+                            ? "text-rose-400"
+                            : deadline.isUrgent
+                              ? "text-amber-400"
+                              : "text-slate-400"
+                        }`}
+                      >
+                        <FiClock size={12} />
+                        <span>Ends: {deadline.label}</span>
+                      </div>
+                    </div>
                   </td>
 
+                  {/* Status */}
                   <td className="px-5 py-4 align-middle text-center">
                     <span
                       className={`inline-flex items-center rounded-md border px-2.5 py-1 text-xs font-medium capitalize whitespace-nowrap ${statusStyle}`}
@@ -235,8 +270,8 @@ const JobsTable = ({ jobs = [] }) => {
                     </span>
                   </td>
 
+                  {/* Actions */}
                   <td className="px-5 py-4 align-middle">
-                    {/* Desktop: Visible icons with margin */}
                     <div className="hidden md:flex items-center justify-center gap-4 my-1">
                       <button
                         onClick={() => handleView(job)}
@@ -260,8 +295,7 @@ const JobsTable = ({ jobs = [] }) => {
                         <FiTrash2 size={18} />
                       </button>
                     </div>
-                    
-                    {/* Mobile: Three-dot menu */}
+
                     <div className="md:hidden flex items-center justify-center">
                       <MobileActionsMenu
                         job={job}

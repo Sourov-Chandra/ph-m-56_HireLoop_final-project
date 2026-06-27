@@ -1,18 +1,18 @@
-import React from 'react'
-import CompanyProfile from './companyProfile'
-import { getUserSession } from '@/lib/core/session';
+import { getUserSession } from "@/lib/core/session";
+import CompanyProfile from "./companyProfile";
 
-const CompanyPage = async() => {
-
+const CompanyPage = async () => {
   const user = await getUserSession();
-  console.log("User Session Data from Company Page:", user);
-      /* const user = await getUserSession();
-      console.log("User Session Data from Company Page:", user.id); */
+
+  if (!user) {
+    redirect("/login"); // or return <div>Not authenticated</div>
+  }
+
   return (
     <div>
       <CompanyProfile recruiter={user} />
     </div>
   );
-}
+};
 
-export default CompanyPage
+export default CompanyPage;
