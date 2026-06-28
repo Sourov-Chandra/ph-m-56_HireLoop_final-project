@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import {
   FiMapPin,
   FiMonitor,
@@ -108,10 +109,10 @@ export default function JobCard({ job }) {
           <span className="text-[12px] text-[#6b6880]">
             Posted {formattedDate}
           </span>
-          <button className="flex items-center gap-1.5 bg-linear-to-br from-violet-600 to-violet-700 text-violet-100 border-none rounded-lg px-4 py-2 text-[13px] font-medium cursor-pointer hover:opacity-85 transition-opacity flex-shrink-0">
+          <Link href={`/jobs/${job._id}`} className="flex items-center gap-1.5 bg-linear-to-br from-violet-600 to-violet-700 text-violet-100 border-none rounded-lg px-4 py-2 text-[13px] font-medium cursor-pointer hover:opacity-85 transition-opacity shrink-0">
             Apply Now
             <FiArrowRight size={14} />
-          </button>
+          </Link>
         </div>
       </div>
     </div>
