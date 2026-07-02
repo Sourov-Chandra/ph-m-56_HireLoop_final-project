@@ -40,7 +40,7 @@ export default function JobsClientWrapper({ jobs = [] }) {
   }, [jobs, filters]);
 
   return (
-    <div className="w-full max-w-6xl px-4 py-10">
+    <div className="w-full max-w-7xl px-4 py-10 mx-auto">
       {/* Header */}
       <h1 className="text-3xl md:text-4xl font-semibold text-white mb-2 text-center">
         Job Listings
@@ -54,7 +54,7 @@ export default function JobsClientWrapper({ jobs = [] }) {
       <JobSearchFilter jobs={jobs} filters={filters} onChange={setFilters} />
 
       {/* Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8 justify-items-stretch">
         {filtered.length > 0 ? (
           filtered.map((job) => <JobCard key={job._id} job={job} />)
         ) : (

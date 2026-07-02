@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Description, Label, Radio, RadioGroup } from "@heroui/react";
 import { Button } from "@heroui/react";
@@ -18,6 +18,8 @@ import { signUp, signOut, authClient } from "@/lib/auth-client";
 
 export default function SignUpPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect" || "");
 
   const [formData, setFormData] = useState({
     name: "",
@@ -171,14 +173,16 @@ export default function SignUpPage() {
         role: role,
       });
 
-      console.log(result, "result");
+      // console.log(result, "result");
 
       if (result?.error) {
         throw new Error(result.error.message || "Failed to create account");
       }
 
+      router.push(redirectTo || "/");
+
       // Only sign out after confirming signup succeeded
-      await signOut({
+     /*  await signOut({
         fetchOptions: {
           onSuccess: () => {
             router.push(
@@ -186,7 +190,7 @@ export default function SignUpPage() {
             );
           },
         },
-      });
+      }); */
     } catch (err) {
       setErrors((prev) => ({
         ...prev,
@@ -242,7 +246,7 @@ export default function SignUpPage() {
             <p className="mt-2 text-sm text-zinc-400">
               Already have an account?{" "}
               <Link
-                href="/signin"
+                href={redirectTo ? `/signin?redirect=${redirectTo}` : "/signin"}
                 className="font-semibold text-indigo-400 hover:text-indigo-300 transition-colors"
               >
                 Sign in
@@ -441,25 +445,30 @@ export default function SignUpPage() {
             </div>
 
             {/* role selection */}
-      <Label>Select your role</Label>
-      <RadioGroup onChange={(value) => setRole(value)} defaultValue="seeker" name="plan-orientation" orientation="horizontal">
-        <Radio selected value="seeker">
-          <Radio.Control>
-            <Radio.Indicator />
-          </Radio.Control>
-          <Radio.Content>
-            <Label>Job Seeker</Label>
-          </Radio.Content>
-        </Radio>
-        <Radio value="recruiter">
-          <Radio.Control>
-            <Radio.Indicator />
-          </Radio.Control>
-          <Radio.Content>
-            <Label>Recruiter</Label>
-          </Radio.Content>
-        </Radio>
-        {/* <Radio value="teams">
+            <Label>Select your role</Label>
+            <RadioGroup
+              onChange={(value) => setRole(value)}
+              defaultValue="seeker"
+              name="plan-orientation"
+              orientation="horizontal"
+            >
+              <Radio selected value="seeker">
+                <Radio.Control>
+                  <Radio.Indicator />
+                </Radio.Control>
+                <Radio.Content>
+                  <Label>Job Seeker</Label>
+                </Radio.Content>
+              </Radio>
+              <Radio value="recruiter">
+                <Radio.Control>
+                  <Radio.Indicator />
+                </Radio.Control>
+                <Radio.Content>
+                  <Label>Recruiter</Label>
+                </Radio.Content>
+              </Radio>
+              {/* <Radio value="teams">
           <Radio.Control>
             <Radio.Indicator />
           </Radio.Control>
@@ -468,7 +477,7 @@ export default function SignUpPage() {
             <Description>Up to 10 teammates</Description>
           </Radio.Content>
         </Radio> */}
-      </RadioGroup>
+            </RadioGroup>
 
             {/* Terms */}
             <div className="w-full">

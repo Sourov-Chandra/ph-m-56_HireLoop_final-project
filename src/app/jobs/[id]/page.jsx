@@ -38,7 +38,7 @@ function capitalize(str = "") {
 
 function Badge({ children }) {
   return (
-    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-violet-500/15 text-violet-300 border border-violet-500/25 whitespace-nowrap">
+    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium bg-violet-500/15 text-violet-300 border border-violet-500/25 whitespace-nowrap mb-3.5">
       {children}
     </span>
   );
@@ -92,7 +92,7 @@ const JobDetailsPage = async ({ params }) => {
 
   return (
     <div className="w-full text-zinc-100">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* ── Top bar ── */}
         <div className="pt-8 pb-4">
           <Link
@@ -105,7 +105,7 @@ const JobDetailsPage = async ({ params }) => {
         </div>
 
         {/* ── Two-column grid ── */}
-        <div className="pb-16 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-6 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_360px] gap-8 pb-16 items-start">
           {/* LEFT COLUMN */}
           <div className="flex flex-col gap-6">
             {/* Hero card */}
@@ -144,7 +144,7 @@ const JobDetailsPage = async ({ params }) => {
                 </button>
               </div>
 
-              <div className="flex flex-wrap gap-2 mt-4">
+              <div className="flex flex-wrap gap-2 mt-4 pb-5">
                 <Badge>{capitalize(jobType)}</Badge>
                 <Badge>{jobCategory}</Badge>
                 {isActive && !deadlinePassed ? (
@@ -249,12 +249,18 @@ const JobDetailsPage = async ({ params }) => {
                 </span>
                 .
               </p>
-              <button
-                disabled={deadlinePassed}
-                className="w-full py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold text-sm transition-colors"
+              <Link
+                href={deadlinePassed ? "#" : `/jobs/${job._id}/apply`}
+                className={`w-full py-2.5 rounded-xl bg-violet-600 text-white font-semibold text-sm transition-colors text-center block
+    ${
+      deadlinePassed
+        ? "opacity-50 cursor-not-allowed pointer-events-none"
+        : "hover:bg-violet-500"
+    }`}
+                aria-disabled={deadlinePassed}
               >
                 {deadlinePassed ? "Applications closed" : "Apply Now"}
-              </button>
+              </Link>
               <button className="w-full py-2.5 rounded-xl border border-white/10 hover:border-violet-500/40 hover:bg-violet-500/10 text-zinc-300 font-medium text-sm transition-all">
                 Save for later
               </button>

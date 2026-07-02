@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@heroui/react";
 import {
@@ -16,6 +16,9 @@ import { authClient, signIn } from "@/lib/auth-client";
 
 export default function SignInPage() {
   const router = useRouter();
+  const params = useSearchParams();
+  const redirectTo = params.get("redirect" || "");
+  // console.log("redirect to", redirectTo);
 
   const [formData, setFormData] = useState({
     email: "",
@@ -50,7 +53,7 @@ export default function SignInPage() {
         throw new Error(result.error.message || "Invalid credentials");
       }
 
-      router.push("/dashboard");
+      router.push(redirectTo || "/");
     } catch (err) {
       setError(err.message || "Something went wrong");
     } finally {
@@ -80,7 +83,7 @@ export default function SignInPage() {
             <p className="mt-2 text-sm text-zinc-400">
               Or{" "}
               <Link
-                href="/signup"
+                href={redirectTo ? `/signup?redirect=${redirectTo}` : "/signup"}
                 className="text-indigo-400 hover:text-indigo-300 font-medium"
               >
                 create a new account

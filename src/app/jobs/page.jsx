@@ -44,7 +44,7 @@ export default async function JobsPage() {
   const jobs = Array.from(data ?? []); // ← strips RSC proxy, makes it a plain array
 
   return (
-    <div className="min-h-screen bg-[#0f0f1a] flex justify-center">
+    <div className="min-h-screen bg-[#0f0f1a] flex justify-center items-center">
       <JobsClientWrapper jobs={jobs} />
     </div>
   );

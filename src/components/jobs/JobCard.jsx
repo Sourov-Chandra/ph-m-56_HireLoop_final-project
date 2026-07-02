@@ -37,7 +37,7 @@ export default function JobCard({ job }) {
   const initials = companyName ? companyName.slice(0, 2).toUpperCase() : "CO";
 
   return (
-    <div className="bg-[#1a1a2e] rounded-2xl p-6 w-80 h-[440px] flex flex-col justify-between border border-violet-500/20 font-sans">
+    <div className="bg-[#1a1a2e] rounded-2xl p-6 w-full h-[440px] flex flex-col justify-between border border-violet-500/20 font-sans">
       {/* Top and Middle Content Container */}
       <div className="flex-1 flex flex-col justify-start">
         {/* Company row */}
@@ -109,7 +109,10 @@ export default function JobCard({ job }) {
           <span className="text-[12px] text-[#6b6880]">
             Posted {formattedDate}
           </span>
-          <Link href={`/jobs/${job._id}`} className="flex items-center gap-1.5 bg-linear-to-br from-violet-600 to-violet-700 text-violet-100 border-none rounded-lg px-4 py-2 text-[13px] font-medium cursor-pointer hover:opacity-85 transition-opacity shrink-0">
+          <Link
+            href={`/jobs/${job._id}`}
+            className="flex items-center gap-1.5 bg-linear-to-br from-violet-600 to-violet-700 text-violet-100 border-none rounded-lg px-4 py-2 text-[13px] font-medium cursor-pointer hover:opacity-85 transition-opacity shrink-0"
+          >
             Apply Now
             <FiArrowRight size={14} />
           </Link>
